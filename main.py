@@ -1,9 +1,9 @@
-# split into train and test set
 from os import listdir
 from xml.etree import ElementTree
 from numpy import zeros
 from numpy import asarray
 from mrcnn.utils import Dataset
+from matplotlib import pyplot
 
 
 # class that defines and loads the kangaroo dataset
@@ -83,10 +83,15 @@ class KangarooDataset(Dataset):
 train_set = KangarooDataset()
 train_set.load_dataset('kangaroo', is_train=True)
 train_set.prepare()
-print('Train: %d' % len(train_set.image_ids))
-
-# test/val set
-test_set = KangarooDataset()
-test_set.load_dataset('kangaroo', is_train=False)
-test_set.prepare()
-print('Test: %d' % len(test_set.image_ids))
+# load an image
+image_id = 0
+image = train_set.load_image(image_id)
+print(image.shape)
+# load image mask
+mask, class_ids = train_set.load_mask(image_id)
+print(mask.shape)
+# plot image
+pyplot.imshow(image)
+# plot mask
+pyplot.imshow(mask[:, :, 0], cmap='gray', alpha=0.5)
+pyplot.show()
